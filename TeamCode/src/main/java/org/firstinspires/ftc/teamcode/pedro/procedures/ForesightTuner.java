@@ -443,7 +443,7 @@ class HeadingBraking extends TuningOpMode<List<Double>> {
     }
 
     @Override
-    protected List<Double> runTuningOpMode() {
+    protected List<Double> runTuningOpMode() throws InterruptedException {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Drivetrain drivetrain = drivetrainFunction.apply(hardwareMap);
 
@@ -453,7 +453,7 @@ class HeadingBraking extends TuningOpMode<List<Double>> {
         List<Double> coefficients = Collections.emptyList();
 
         POWERS = biasedGradient(trials, maxPower, minPower, bias);
-
+        Thread.sleep(1000);
         waitForStart();
         timer.reset();
 
@@ -577,7 +577,7 @@ class HeadingTuner extends TuningOpMode<Double> {
     }
 
     @Override
-    protected Double runTuningOpMode() {
+    protected Double runTuningOpMode() throws InterruptedException {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Drivetrain drivetrain = drivetrainFunction.apply(hardwareMap);
 
@@ -590,6 +590,7 @@ class HeadingTuner extends TuningOpMode<Double> {
         vMax = 0;
         lastTime = 0.0;
 
+        Thread.sleep(1000);
         waitForStart();
         timer.reset();
         lastTime = timer.seconds();
@@ -708,7 +709,6 @@ class ForwardBraking extends TuningOpMode<List<Double>> {
         POWERS = biasedGradient(trials, maxPower, minPower, bias);
 
         List<Double> coefficients = Collections.emptyList();
-
         waitForStart();
         timer.reset();
 
@@ -720,6 +720,16 @@ class ForwardBraking extends TuningOpMode<List<Double>> {
             if (iteration < POWERS.length) {
                 power = POWERS[iteration];
             }
+
+            telemetry.addData("state", state);
+            telemetry.addData("iteration", iteration + " / " + POWERS.length);
+            telemetry.addData("power", power * direction);
+            telemetry.addData("measured velocity (at brake start)", measuredVelocity);
+            telemetry.addData("current velocity", localizer.velocity().toVector2D().magnitude());
+            telemetry.addData("heading power", getHeadingPower(localizer));
+            telemetry.addData("pose", localizer.pose());
+            telemetry.addData("trials collected", velocityToBrakingDistance.size());
+            telemetry.update();
 
             switch (state) {
                 case DRIVE: {
@@ -863,7 +873,7 @@ class StrafeBraking extends TuningOpMode<List<Double>> {
     }
 
     @Override
-    protected List<Double> runTuningOpMode() {
+    protected List<Double> runTuningOpMode() throws InterruptedException {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Drivetrain drivetrain = drivetrainFunction.apply(hardwareMap);
 
@@ -873,7 +883,7 @@ class StrafeBraking extends TuningOpMode<List<Double>> {
         POWERS = biasedGradient(trials, maxPower, minPower, bias);
 
         List<Double> coefficients = Collections.emptyList();
-
+        Thread.sleep(1000);
         waitForStart();
         timer.reset();
 
@@ -885,6 +895,16 @@ class StrafeBraking extends TuningOpMode<List<Double>> {
             if (iteration < POWERS.length) {
                 power = POWERS[iteration];
             }
+
+            telemetry.addData("state", state);
+            telemetry.addData("iteration", iteration + " / " + POWERS.length);
+            telemetry.addData("power", power * direction);
+            telemetry.addData("measured velocity (at brake start)", measuredVelocity);
+            telemetry.addData("current velocity", localizer.velocity().toVector2D().magnitude());
+            telemetry.addData("heading power", getHeadingPower(localizer));
+            telemetry.addData("pose", localizer.pose());
+            telemetry.addData("trials collected", velocityToBrakingDistance.size());
+            telemetry.update();
 
             switch (state) {
                 case DRIVE: {
@@ -1019,7 +1039,7 @@ class ForwardTranslational extends TuningOpMode<List<Double>> {
     }
 
     @Override
-    protected List<Double> runTuningOpMode() {
+    protected List<Double> runTuningOpMode() throws InterruptedException {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Drivetrain drivetrain = drivetrainFunction.apply(hardwareMap);
 
@@ -1031,7 +1051,7 @@ class ForwardTranslational extends TuningOpMode<List<Double>> {
         done = false;
         vMax = 0;
         lastTime = 0.0;
-
+        Thread.sleep(1000);
         waitForStart();
         timer.reset();
         lastTime = timer.seconds();
@@ -1134,7 +1154,7 @@ class StrafeTranslational extends TuningOpMode<List<Double>> {
     }
 
     @Override
-    protected List<Double> runTuningOpMode() {
+    protected List<Double> runTuningOpMode() throws InterruptedException {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Drivetrain drivetrain = drivetrainFunction.apply(hardwareMap);
 
@@ -1147,6 +1167,7 @@ class StrafeTranslational extends TuningOpMode<List<Double>> {
         vMax = 0;
         lastTime = 0.0;
 
+        Thread.sleep(1000);
         waitForStart();
         timer.reset();
         lastTime = timer.seconds();
